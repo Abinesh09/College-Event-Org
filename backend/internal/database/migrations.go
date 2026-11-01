@@ -85,6 +85,12 @@ func RunMigrations(pool *pgxpool.Pool) error {
 	CREATE INDEX IF NOT EXISTS idx_registrations_event ON event_registrations(event_id);
 	CREATE INDEX IF NOT EXISTS idx_registrations_student ON event_registrations(student_id);
 	CREATE INDEX IF NOT EXISTS idx_registrations_status ON event_registrations(status);
+
+	CREATE TABLE IF NOT EXISTS system_metadata (
+		key VARCHAR(100) PRIMARY KEY,
+		value VARCHAR(255) NOT NULL,
+		created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+	);
 	`
 
 	_, err := pool.Exec(ctx, migrationSQL)

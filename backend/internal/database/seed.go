@@ -13,14 +13,20 @@ import (
 func SeedDatabase(pool *pgxpool.Pool) error {
 	ctx := context.Background()
 
-	var count int
-	err := pool.QueryRow(ctx, "SELECT COUNT(*) FROM users").Scan(&count)
-	if err != nil {
-		return fmt.Errorf("failed to check existing users: %w", err)
+	// 1. Check if initial seeding was already completed in the past
+	var seedCompleted bool
+	err := pool.QueryRow(ctx, "SELECT EXISTS(SELECT 1 FROM system_metadata WHERE key = 'initial_seed_completed')").Scan(&seedCompleted)
+	if err == nil && seedCompleted {
+		log.Println("Initial database seed already executed previously. Skipping seed to respect user deletions.")
+		return nil
 	}
 
-	if count > 0 {
-		log.Println("Database already has data, skipping seed")
+	// 2. If data already exists (e.g. from prior schema without metadata), flag it and skip
+	var userCount int
+	_ = pool.QueryRow(ctx, "SELECT COUNT(*) FROM users").Scan(&userCount)
+	if userCount > 0 {
+		_, _ = pool.Exec(ctx, "INSERT INTO system_metadata (key, value) VALUES ('initial_seed_completed', 'true') ON CONFLICT (key) DO NOTHING")
+		log.Println("Existing data detected; marked initial_seed_completed = true to prevent re-seeding if records are deleted.")
 		return nil
 	}
 
@@ -363,7 +369,10 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 		}
 	}
 
-	log.Println("Seed data successfully populated!")
+	// Flag initial seed as permanently completed so future deletions are never overwritten
+	_, _ = pool.Exec(ctx, "INSERT INTO system_metadata (key, value) VALUES ('initial_seed_completed', 'true') ON CONFLICT (key) DO NOTHING")
+
+	log.Println("Seed data successfully populated and flagged in system_metadata!")
 	return nil
 }
 
