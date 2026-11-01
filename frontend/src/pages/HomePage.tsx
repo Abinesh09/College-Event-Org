@@ -13,36 +13,32 @@ export const HomePage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const fallbackSlides = [
+  // High-Resolution Live Event Slides for Campus Sangamam 2026 at Vivekananda Auditorium, CEG Guindy
+  const sangamamSlides = [
     {
-      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80',
-      title: 'InnovateX 2026: 36-Hour Tamil Nadu State Hackathon',
-      category: 'Technology',
-      venue: 'Ramanujan Computing Centre, Anna University'
+      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=85',
+      title: 'Vivekananda Auditorium Grand Stage & Concert Lights',
+      tag: 'Grand Inaugural'
     },
     {
-      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80',
-      title: 'Campus Sangamam: Cultural Extravaganza 2026',
-      category: 'Cultural',
-      venue: 'Vivekananda Auditorium, CEG Campus, Guindy'
+      image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1920&q=85',
+      title: 'Battle of the Bands & Inter-College Musical Night',
+      tag: 'Music Extravaganza'
     },
     {
-      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1600&q=80',
-      title: 'RoboWars & Autonomous Drone Derby 2026',
-      category: 'Robotics',
-      venue: 'GRD Arena, PSG Tech'
+      image: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1920&q=85',
+      title: 'Classical Bharatanatyam & Fusion Dance Ensembles',
+      tag: 'Theatrical Arts'
     },
     {
-      image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1600&q=80',
-      title: 'Tamil Nadu State Inter-Collegiate Athletic Championship',
-      category: 'Sports',
-      venue: 'Jawaharlal Nehru Stadium & Anna University'
+      image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1920&q=85',
+      title: '40 Tamil Nadu Colleges Student Gathering & Celebrations',
+      tag: 'Youth Carnival'
     },
     {
-      image: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1600&q=80',
-      title: 'Generative AI & Agentic Systems Masterclass',
-      category: 'AI & Data Science',
-      venue: 'Dr. A.P.J. Abdul Kalam Convention Hall, SSN'
+      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1920&q=85',
+      title: 'Annual State Trophies & Valedictory Awards Ceremony',
+      tag: 'State Honors'
     }
   ];
 
@@ -62,76 +58,64 @@ export const HomePage: React.FC = () => {
     fetchEvents();
   }, []);
 
-  const liveSlides = featuredEvents
-    .filter((e) => e.poster_url && e.poster_url.trim().length > 0)
-    .map((e) => ({
-      image: e.poster_url!,
-      title: e.title,
-      category: e.category,
-      venue: e.venue
-    }));
-
-  const slides = liveSlides.length > 0 ? liveSlides : fallbackSlides;
-
-  // Auto-rotate slides every 4.5 seconds
+  // Auto-rotate slides smoothly one by one every 4 seconds
   useEffect(() => {
-    if (slides.length <= 1 || isPaused) return;
+    if (isPaused) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4500);
+      setCurrentSlide((prev) => (prev + 1) % sangamamSlides.length);
+    }, 4000);
     return () => clearInterval(interval);
-  }, [slides.length, isPaused]);
+  }, [isPaused, sangamamSlides.length]);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % sangamamSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + sangamamSlides.length) % sangamamSlides.length);
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section with Live Moving Event Slides */}
       <section
-        className="relative overflow-hidden bg-slate-950 py-20 lg:py-28 text-white min-h-[580px] flex items-center"
+        className="relative overflow-hidden bg-slate-950 py-20 lg:py-28 text-white min-h-[600px] flex items-center"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Live Event Moving Slides */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {slides.map((slide, idx) => (
+        {/* Live Moving Event Slides - Clear & Bright */}
+        <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
+          {sangamamSlides.map((slide, idx) => (
             <div
               key={slide.image + idx}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                idx === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                idx === currentSlide
+                  ? 'opacity-100 scale-100 z-10'
+                  : 'opacity-0 scale-105 z-0 pointer-events-none'
               }`}
             >
               <img
                 src={slide.image}
                 alt={slide.title}
-                className={`w-full h-full object-cover object-center transform transition-transform duration-[6000ms] ease-out ${
-                  idx === currentSlide ? 'scale-105' : 'scale-100'
-                }`}
+                className="w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.05]"
               />
             </div>
           ))}
 
-          {/* Deep Dark Multi-Layer Gradient Overlays for High-Contrast Text Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/65" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40" />
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#14b8a6_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
+          {/* Smooth Soft Left-Side Gradient for Pure Text Contrast (Right side stays clear and bright) */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/55 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/20 pointer-events-none" />
         </div>
 
         {/* Content Layer */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
           <div className="max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-teal-500/20 border border-teal-500/40 text-teal-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-teal-400 animate-pulse" />
               <span>CampusConnect 2026 Portal</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-md">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-lg">
               Empowering College Events, <br />
               <span className="text-teal-400">Streamlining Registrations.</span>
             </h1>
 
-            <p className="text-lg text-slate-200 leading-relaxed mb-8 drop-shadow">
+            <p className="text-lg text-slate-200 leading-relaxed mb-8 drop-shadow-md">
               Discover university hackathons, research symposiums, cultural nights, and athletic championships. Teachers organize seamlessly, students register in seconds, and event analytics update live with demographic insights.
             </p>
 
@@ -170,53 +154,61 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Bottom Live Event Slide Controls & Status Bar */}
-          <div className="mt-12 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-            {/* Current Event Badge */}
-            <div className="flex items-center space-x-3 bg-slate-900/80 backdrop-blur-md border border-white/15 px-4 py-2 rounded-xl shadow-lg">
-              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-teal-500/20 text-teal-400">
-                <Camera className="w-4 h-4" />
+          <div className="mt-12 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-4">
+            {/* Current Event Badge - Live Featured Event Campus Sangamam */}
+            <div className="flex items-center space-x-3 bg-slate-950/85 backdrop-blur-md border border-teal-500/40 px-4 py-2.5 rounded-xl shadow-2xl">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                <Camera className="w-4 h-4 animate-pulse" />
               </div>
-              <div className="text-xs">
-                <span className="text-slate-400 font-medium">Live Featured Event:</span>{' '}
-                <span className="text-white font-bold ml-1">{slides[currentSlide]?.title}</span>
-                <span className="text-teal-400 font-semibold ml-2 hidden sm:inline">
-                  📍 {slides[currentSlide]?.venue}
+              <div className="text-xs sm:text-sm">
+                <span className="text-teal-400 font-extrabold uppercase tracking-wider text-[11px] block sm:inline sm:mr-2">
+                  Live Featured Event:
+                </span>
+                <span className="text-white font-extrabold">
+                  Campus Sangamam: Inter-College Cultural Extravaganza 2026
+                </span>
+                <span className="text-teal-300 font-semibold ml-2">
+                  📍 Vivekananda Auditorium, CEG Campus, Guindy, Chennai
                 </span>
               </div>
             </div>
 
-            {/* Slide Navigation Dots and Arrows */}
-            <div className="flex items-center space-x-3 bg-slate-900/80 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-xl shadow-lg">
+            {/* Slide Navigation Controls */}
+            <div className="flex items-center space-x-3 bg-slate-950/85 backdrop-blur-md border border-white/20 px-3 py-2 rounded-xl shadow-2xl">
               <button
                 onClick={prevSlide}
-                className="p-1 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/15 text-slate-300 hover:text-white transition-colors"
                 title="Previous Slide"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <div className="flex space-x-1.5 items-center px-1">
-                {slides.map((_, idx) => (
+              <div className="flex space-x-2 items-center px-1">
+                {sangamamSlides.map((slide, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentSlide(idx)}
                     className={`transition-all duration-300 rounded-full ${
                       idx === currentSlide
-                        ? 'w-6 h-2 bg-teal-400'
-                        : 'w-2 h-2 bg-white/40 hover:bg-white/80'
+                        ? 'w-8 h-2.5 bg-teal-400 shadow-md shadow-teal-400/50'
+                        : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/80'
                     }`}
-                    title={`Slide ${idx + 1}`}
+                    title={slide.title}
                   />
                 ))}
               </div>
 
               <button
                 onClick={nextSlide}
-                className="p-1 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/15 text-slate-300 hover:text-white transition-colors"
                 title="Next Slide"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
+
+              <span className="text-xs text-slate-300 font-bold border-l border-white/20 pl-2">
+                {currentSlide + 1} / {sangamamSlides.length}
+              </span>
             </div>
           </div>
         </div>
