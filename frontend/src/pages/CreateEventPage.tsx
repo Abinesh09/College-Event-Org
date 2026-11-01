@@ -305,7 +305,7 @@ export const CreateEventPage: React.FC = () => {
                 required
                 value={formData.venue}
                 onChange={handleChange}
-                placeholder="e.g. Main Auditorium, Innovation Center Lab 3, or Athletic Field"
+                placeholder="e.g. Ramanujan Computing Centre & TAG Auditorium, Anna University, Chennai"
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
               />
             </div>
@@ -418,7 +418,7 @@ export const CreateEventPage: React.FC = () => {
                 name="contact_info"
                 value={formData.contact_info}
                 onChange={handleChange}
-                placeholder="Faculty Name & Email (e.g. prof.name@college.edu)"
+                placeholder="e.g. Prof. K. Anbarasan (+91 98401 11223 | anbarasan@annauniv.edu)"
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
               />
             </div>

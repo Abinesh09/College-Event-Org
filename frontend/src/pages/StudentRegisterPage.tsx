@@ -19,7 +19,7 @@ export const StudentRegisterPage: React.FC = () => {
     email: '',
     password: '',
     confirm_password: '',
-    college_name: 'Apex Institute of Technology',
+    college_name: 'Anna University (CEG Campus, Chennai)',
     student_id: '',
     department: 'Computer Science',
     year_of_study: '1st Year',
@@ -30,6 +30,22 @@ export const StudentRegisterPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const tnColleges = [
+    'Anna University (CEG Campus, Chennai)',
+    'PSG College of Technology, Coimbatore',
+    'Madras Institute of Technology (MIT), Chromepet',
+    'Thiagarajar College of Engineering (TCE), Madurai',
+    'SSN College of Engineering, Kalavakkam',
+    'Coimbatore Institute of Technology (CIT), Coimbatore',
+    'Government College of Technology (GCT), Coimbatore',
+    'Kumaraguru College of Technology (KCT), Coimbatore',
+    'SRM Institute of Science and Technology, Chennai',
+    'Sathyabama Institute of Science and Technology, Chennai',
+    'SASTRA Deemed University, Thanjavur',
+    'St. Joseph College of Engineering, Chennai',
+    'Other College / Institution in Tamil Nadu',
+  ];
 
   useEffect(() => {
     if (eventId) {
@@ -92,10 +108,19 @@ export const StudentRegisterPage: React.FC = () => {
       return;
     }
 
+    // Indian Mobile Number Validation (+91 with 10 digits)
+    const rawDigits = formData.phone_number.replace(/\D/g, '');
+    if (rawDigits && rawDigits.length !== 10) {
+      setError('Please enter a valid 10-digit Indian mobile number (e.g. 98401 23456).');
+      return;
+    }
+    const formattedPhone = rawDigits ? `+91 ${rawDigits.slice(0, 5)} ${rawDigits.slice(5)}` : '';
+
     try {
       setSubmitting(true);
       const payload: any = {
         ...formData,
+        phone_number: formattedPhone,
         age: formData.age ? parseInt(formData.age, 10) : undefined,
       };
 
@@ -202,7 +227,7 @@ export const StudentRegisterPage: React.FC = () => {
                     required
                     value={formData.full_name}
                     onChange={handleChange}
-                    placeholder="e.g. Alex Rivera"
+                    placeholder="e.g. Karthik Raja / Kaviya Murugan"
                     className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
                   />
                 </div>
@@ -222,7 +247,7 @@ export const StudentRegisterPage: React.FC = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="student@college.edu"
+                    placeholder="karthik.student@annauniv.edu"
                     className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
                   />
                 </div>
@@ -278,20 +303,25 @@ export const StudentRegisterPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  College / Institution Name <span className="text-red-500">*</span>
+                  College / Institution Name (Tamil Nadu) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <Building2 className="w-4 h-4" />
                   </div>
-                  <input
-                    type="text"
+                  <select
                     name="college_name"
                     required
                     value={formData.college_name}
                     onChange={handleChange}
-                    className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                  />
+                    className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white truncate"
+                  >
+                    {tnColleges.map((col) => (
+                      <option key={col} value={col}>
+                        {col}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -309,7 +339,7 @@ export const StudentRegisterPage: React.FC = () => {
                     required
                     value={formData.student_id}
                     onChange={handleChange}
-                    placeholder="e.g. CS2024-054"
+                    placeholder="e.g. 21CS042 / 717822P101"
                     className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
                   />
                 </div>
@@ -399,21 +429,28 @@ export const StudentRegisterPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Phone Number
+                  Mobile Number (Tamil Nadu / India) <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Phone className="w-4 h-4" />
-                  </div>
+                <div className="flex rounded-lg shadow-sm border border-slate-300 focus-within:ring-2 focus-within:ring-teal-500 focus-within:border-teal-500 overflow-hidden">
+                  <span className="inline-flex items-center px-3 bg-slate-100 text-slate-700 text-xs font-bold border-r border-slate-300 select-none">
+                    🇮🇳 +91
+                  </span>
                   <input
                     type="tel"
                     name="phone_number"
+                    required
+                    maxLength={10}
                     value={formData.phone_number}
-                    onChange={handleChange}
-                    placeholder="+1 555-0199"
-                    className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setFormData({ ...formData, phone_number: val });
+                      if (error) setError(null);
+                    }}
+                    placeholder="98401 23456"
+                    className="w-full px-3 py-2 text-sm outline-none bg-white font-medium"
                   />
                 </div>
+                <p className="text-[11px] text-slate-400 mt-1">Enter 10-digit mobile number</p>
               </div>
             </div>
           </div>

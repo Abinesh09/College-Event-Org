@@ -43,7 +43,7 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 		INSERT INTO users (full_name, email, password_hash, role)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id
-	`, "Prof. Alan Turing", "teacher@college.edu", hashedPassword, "teacher").Scan(&teacher1ID)
+	`, "Prof. K. Anbarasan", "teacher@college.edu", hashedPassword, "teacher").Scan(&teacher1ID)
 	if err != nil {
 		return fmt.Errorf("failed to seed teacher 1: %w", err)
 	}
@@ -52,12 +52,12 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 		INSERT INTO users (full_name, email, password_hash, role)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id
-	`, "Dr. Sarah Connor", "sarah.faculty@college.edu", hashedPassword, "teacher").Scan(&teacher2ID)
+	`, "Dr. Meenakshi Sundaram", "sarah.faculty@college.edu", hashedPassword, "teacher").Scan(&teacher2ID)
 	if err != nil {
 		return fmt.Errorf("failed to seed teacher 2: %w", err)
 	}
 
-	// 2. Seed Students and Profiles
+	// 2. Seed Students and Profiles (Tamil Nadu Colleges & +91 Mobile Numbers)
 	type seedStudent struct {
 		name    string
 		email   string
@@ -73,64 +73,64 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 
 	students := []seedStudent{
 		{
-			name:    "Alex Rivera",
+			name:    "Karthik Raja",
 			email:   "alex.student@college.edu",
-			college: "Apex Institute of Technology",
-			id:      "CS2023-042",
+			college: "Anna University (CEG Campus, Chennai)",
+			id:      "21CS042",
 			dept:    "Computer Science",
 			year:    "3rd Year",
 			dob:     "2004-03-15",
 			age:     22,
 			gender:  "Male",
-			phone:   "+1 555-0192",
+			phone:   "+91 98401 23456",
 		},
 		{
-			name:    "Priya Sharma",
+			name:    "Priya Natarajan",
 			email:   "priya.student@college.edu",
-			college: "Apex Institute of Technology",
-			id:      "EC2024-118",
+			college: "PSG College of Technology, Coimbatore",
+			id:      "717822P118",
 			dept:    "Electronics & Communication",
 			year:    "2nd Year",
 			dob:     "2005-08-22",
 			age:     21,
 			gender:  "Female",
-			phone:   "+1 555-0143",
+			phone:   "+91 97890 12345",
 		},
 		{
-			name:    "Marcus Vance",
+			name:    "Vigneshwaran S",
 			email:   "marcus.student@college.edu",
-			college: "Apex Institute of Technology",
-			id:      "ME2022-089",
+			college: "Madras Institute of Technology (MIT), Chromepet",
+			id:      "2021MIT089",
 			dept:    "Mechanical Engineering",
 			year:    "4th Year",
 			dob:     "2003-11-05",
 			age:     23,
 			gender:  "Male",
-			phone:   "+1 555-0188",
+			phone:   "+91 94441 56789",
 		},
 		{
-			name:    "Aisha Khan",
+			name:    "Kaviya Murugan",
 			email:   "aisha.student@college.edu",
-			college: "Apex Institute of Technology",
-			id:      "CE2025-012",
+			college: "Thiagarajar College of Engineering (TCE), Madurai",
+			id:      "22TCE012",
 			dept:    "Civil Engineering",
 			year:    "1st Year",
 			dob:     "2006-02-14",
 			age:     20,
-			gender:  "Prefer not to say",
-			phone:   "+1 555-0167",
+			gender:  "Female",
+			phone:   "+91 99402 34567",
 		},
 		{
-			name:    "Elena Rostova",
+			name:    "Soundarya R",
 			email:   "elena.student@college.edu",
-			college: "Apex Institute of Technology",
-			id:      "IT2023-077",
+			college: "SSN College of Engineering, Kalavakkam",
+			id:      "SSN2023IT77",
 			dept:    "Information Technology",
 			year:    "3rd Year",
 			dob:     "2004-07-19",
 			age:     22,
 			gender:  "Female",
-			phone:   "+1 555-0211",
+			phone:   "+91 98840 67890",
 		},
 	}
 
@@ -190,22 +190,22 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 	eventsList := []seedEvent{
 		{
 			organizerID:  teacher1ID,
-			title:        "InnovateX 2026: 36-Hour National Hackathon",
-			shortDesc:    "Annual flagship software and hardware sprint tackling real-world sustainability and AI challenges.",
-			desc:         "Join over 50 visionary student developers, designers, and innovators for 36 hours of non-stop creativity. Build groundbreaking web applications, AI models, and IoT gadgets with mentorship from industry architects and cash prizes over $5,000.",
+			title:        "InnovateX 2026: 36-Hour Tamil Nadu State Hackathon",
+			shortDesc:    "State-level software and hardware sprint tackling real-world sustainability and AI challenges.",
+			desc:         "Join over 50 visionary student developers, designers, and innovators from across Tamil Nadu for 36 hours of non-stop creativity. Build groundbreaking web applications, AI models, and IoT gadgets with mentorship from industry architects and cash prizes over ₹1,00,000.",
 			category:     "Technology",
 			eventType:    "technical",
 			date:         event1Date,
 			startTime:    "09:00 AM",
 			endTime:      "09:00 PM",
-			venue:        "Turing Tech Hub & Main Innovation Auditorium",
+			venue:        "Ramanujan Computing Centre & TAG Auditorium, Anna University, Chennai",
 			dept:         "Computer Science",
 			openAt:       now.AddDate(0, 0, -5),
 			deadline:     now.AddDate(0, 0, 5),
 			maxSeats:     50,
-			criteria:     "Open to all undergraduate and postgraduate engineering and tech students.",
+			criteria:     "Open to all undergraduate and postgraduate engineering and tech students in Tamil Nadu.",
 			poster:       "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Prof. Alan Turing (hackathon@apex.edu | Room CS-304)",
+			contact:      "Prof. K. Anbarasan (+91 98401 11223 | hackathon@annauniv.edu)",
 			status:       "published",
 		},
 		{
@@ -218,34 +218,34 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 			date:         event2Date,
 			startTime:    "10:00 AM",
 			endTime:      "05:00 PM",
-			venue:        "Mechanical Dynamics Arena & North Lawn",
+			venue:        "GRD Open Air Theatre & Dynamics Arena, PSG Tech, Peelamedu, Coimbatore",
 			dept:         "Mechanical Engineering",
 			openAt:       now.AddDate(0, 0, -3),
 			deadline:     now.AddDate(0, 0, 10),
 			maxSeats:     40,
 			criteria:     "Robotics teams of 1 to 4 members. Safety check mandatory before weigh-in.",
 			poster:       "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Dr. Sarah Connor (robotics@apex.edu | Mech Wing B)",
+			contact:      "Dr. Meenakshi Sundaram (+91 94432 44556 | robotics@psgtech.ac.in)",
 			status:       "published",
 		},
 		{
 			organizerID:  teacher1ID,
-			title:        "Campus Symphony: Annual Inter-College Cultural Extravaganza",
-			shortDesc:    "The biggest celebration of music, theatrical arts, dance ensembles, and creative expression.",
-			desc:         "A 3-day fest bringing together students from across 30 colleges. Features solo vocals, battle of the bands, classical fusion choreography, standup comedy, and street plays.",
+			title:        "Campus Sangamam: Inter-College Cultural Extravaganza 2026",
+			shortDesc:    "The biggest celebration of Tamil culture, music, theatrical arts, dance ensembles, and creative expression.",
+			desc:         "A 3-day fest bringing together students from across 40 Tamil Nadu engineering & arts colleges. Features solo vocals, battle of the bands, classical Bharatanatyam fusion choreography, standup comedy, and street plays.",
 			category:     "Cultural",
 			eventType:    "cultural",
 			date:         event3Date,
 			startTime:    "05:00 PM",
 			endTime:      "10:00 PM",
-			venue:        "Grand University Amphitheatre",
+			venue:        "Vivekananda Auditorium, CEG Campus, Guindy, Chennai",
 			dept:         "Student Cultural Affairs",
 			openAt:       now.AddDate(0, 0, -2),
 			deadline:     now.AddDate(0, 0, 18),
 			maxSeats:     150,
 			criteria:     "Open to all students with valid college ID.",
 			poster:       "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Cultural Committee (cultural@apex.edu)",
+			contact:      "Cultural Affairs Committee (+91 98410 88990 | sangamam@annauniv.edu)",
 			status:       "published",
 		},
 		{
@@ -258,19 +258,19 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 			date:         event4Date,
 			startTime:    "02:00 PM",
 			endTime:      "06:00 PM",
-			venue:        "Cyber Seminar Hall 1 & Virtual Stream",
+			venue:        "Dr. A.P.J. Abdul Kalam Convention Hall, MIT Campus, Chromepet, Chennai",
 			dept:         "Computer Science",
 			openAt:       now.AddDate(0, 0, -10),
 			deadline:     now.AddDate(0, 0, 3),
 			maxSeats:     60,
 			criteria:     "Basic proficiency in Python and REST APIs recommended.",
 			poster:       "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Prof. Alan Turing (alan.turing@apex.edu)",
+			contact:      "Prof. K. Anbarasan (+91 98401 11223 | cs-events@annauniv.edu)",
 			status:       "published",
 		},
 		{
 			organizerID:  teacher2ID,
-			title:        "Annual Sports Championship: Athletics & Court Sports",
+			title:        "Tamil Nadu State Inter-Collegiate Athletic Championship",
 			shortDesc:    "Sprint track events, relays, basketball, volleyball, and badminton tournaments.",
 			desc:         "Compete for the championship trophy in track and field, basketball, and table tennis. Medals and state-level qualifying certificates awarded to winners.",
 			category:     "Sports",
@@ -278,14 +278,14 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 			date:         event5Date,
 			startTime:    "08:00 AM",
 			endTime:      "04:00 PM",
-			venue:        "University Sports Complex & Stadium",
+			venue:        "Jawaharlal Nehru Stadium & Anna University Sports Complex, Chennai",
 			dept:         "Physical Education",
 			openAt:       now.AddDate(0, 0, -5),
 			deadline:     now.AddDate(0, 0, 12),
 			maxSeats:     80,
 			criteria:     "Medical fitness clearance required on day of reporting.",
 			poster:       "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Sports Director (sports@apex.edu)",
+			contact:      "Physical Education Director (+91 94440 22334 | sports@annauniv.edu)",
 			status:       "published",
 		},
 		{
@@ -298,14 +298,14 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 			date:         draftDate,
 			startTime:    "10:00 AM",
 			endTime:      "03:00 PM",
-			venue:        "Computing Center Lab 3",
+			venue:        "Sir C.V. Raman Computing Lab, TCE Campus, Madurai",
 			dept:         "Computer Science",
 			openAt:       now.AddDate(0, 0, 10),
 			deadline:     now.AddDate(0, 0, 25),
 			maxSeats:     30,
 			criteria:     "Prior experience with Linux command line.",
 			poster:       "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
-			contact:      "Prof. Alan Turing",
+			contact:      "Prof. K. Anbarasan (+91 98401 11223 | cloud@annauniv.edu)",
 			status:       "draft",
 		},
 	}

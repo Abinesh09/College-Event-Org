@@ -71,16 +71,16 @@ export const LoginPage: React.FC = () => {
               onClick={() => handleQuickFill('teacher@college.edu')}
               className="text-left px-2.5 py-1.5 rounded-lg bg-white border border-teal-200 text-xs text-slate-700 hover:border-teal-400 transition-colors"
             >
-              <div className="font-bold text-teal-700">Teacher Demo</div>
-              <div className="text-[10px] text-slate-500 truncate">teacher@college.edu</div>
+              <div className="font-bold text-purple-700">Prof. K. Anbarasan</div>
+              <div className="text-[10px] text-slate-500 truncate">teacher@college.edu • Anna Univ</div>
             </button>
             <button
               type="button"
               onClick={() => handleQuickFill('alex.student@college.edu')}
               className="text-left px-2.5 py-1.5 rounded-lg bg-white border border-teal-200 text-xs text-slate-700 hover:border-teal-400 transition-colors"
             >
-              <div className="font-bold text-teal-700">Student Demo</div>
-              <div className="text-[10px] text-slate-500 truncate">alex.student@college.edu</div>
+              <div className="font-bold text-teal-700">Karthik Raja</div>
+              <div className="text-[10px] text-slate-500 truncate">alex.student@college.edu • CEG</div>
             </button>
           </div>
         </div>

@@ -72,11 +72,14 @@ export const Footer: React.FC = () => {
             <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3">College Support</h4>
             <div className="flex items-start space-x-2">
               <MapPin className="w-4 h-4 text-teal-500 flex-shrink-0 mt-0.5" />
-              <span>Campus Innovation Center, Wing B, University Drive</span>
+              <span>Anna University Campus, Sardar Patel Road, Guindy, Chennai, Tamil Nadu - 600025</span>
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="w-4 h-4 text-teal-500 flex-shrink-0" />
-              <span>events@apex.edu</span>
+              <span>events@annauniv.edu</span>
+            </div>
+            <div className="text-[11px] text-teal-300 font-semibold pl-6">
+              Phone: +91 44 2235 7004 / +91 98401 23456
             </div>
             <div className="flex items-center space-x-2 pt-2 text-[11px] text-slate-500">
               <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
@@ -86,7 +89,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} CampusConnect — Full-Stack College Event Management System.</p>
+          <p>© {new Date().getFullYear()} CampusConnect — Full-Stack College Event Management System (Tamil Nadu Edition).</p>
           <p className="text-[11px]">Built with React, Vite, Tailwind CSS, Go (Fiber), PostgreSQL & Docker.</p>
         </div>
       </div>
@@ -108,13 +111,13 @@ export const Footer: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-400 mb-4">
-              Use these seeded accounts for instant evaluation and testing of both Teacher and Student capabilities.
+              Use these seeded Tamil Nadu faculty and student credentials for instant evaluation.
             </p>
 
             <div className="space-y-3 text-xs">
               <div className="p-3 rounded-lg bg-slate-800/80 border border-slate-700">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-teal-400">Teacher / Organizer</span>
+                  <span className="font-bold text-teal-400">Prof. K. Anbarasan (Anna Univ)</span>
                   <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-purple-900/60 text-purple-300 font-semibold">Teacher Role</span>
                 </div>
                 <div><span className="text-slate-400">Email:</span> <code className="text-teal-200">teacher@college.edu</code></div>
@@ -123,19 +126,21 @@ export const Footer: React.FC = () => {
 
               <div className="p-3 rounded-lg bg-slate-800/80 border border-slate-700">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-teal-400">Student Account 1</span>
+                  <span className="font-bold text-teal-400">Karthik Raja (Anna Univ - CEG)</span>
                   <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-semibold">Student Role</span>
                 </div>
                 <div><span className="text-slate-400">Email:</span> <code className="text-teal-200">alex.student@college.edu</code></div>
+                <div><span className="text-slate-400">Roll No & Phone:</span> <span className="text-slate-300">21CS042 • +91 98401 23456</span></div>
                 <div><span className="text-slate-400">Password:</span> <code className="text-teal-200">Password123!</code></div>
               </div>
 
               <div className="p-3 rounded-lg bg-slate-800/80 border border-slate-700">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-teal-400">Student Account 2</span>
+                  <span className="font-bold text-teal-400">Priya Natarajan (PSG Tech)</span>
                   <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-semibold">Student Role</span>
                 </div>
                 <div><span className="text-slate-400">Email:</span> <code className="text-teal-200">priya.student@college.edu</code></div>
+                <div><span className="text-slate-400">Roll No & Phone:</span> <span className="text-slate-300">717822P118 • +91 97890 12345</span></div>
                 <div><span className="text-slate-400">Password:</span> <code className="text-teal-200">Password123!</code></div>
               </div>
             </div>

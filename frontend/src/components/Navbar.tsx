@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, User as UserIcon, LogOut, PlusCircle, BookmarkCheck, LayoutDashboard, Sparkles, Menu, X } from 'lucide-react';
+import { Calendar, User as UserIcon, LogOut, PlusCircle, BookmarkCheck, LayoutDashboard, Sparkles, Menu, X, Play } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { PortalGuideModal } from './PortalGuideModal';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, isTeacher, isStudent, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -84,7 +86,27 @@ export const Navbar: React.FC = () => {
 
           {/* Right Section / Auth Controls */}
           <div className="hidden md:flex items-center space-x-3">
-            {isAuthenticated && user ? (
+            <button
+              onClick={() => setGuideOpen(true)}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors shadow-sm"
+              title="Open Role Guide Walkthrough"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+              <span>Portal Guide</span>
+            </button>
+
+            {/* Mobile Guide Button */}
+          <div className="pt-2">
+            <button
+              onClick={() => { setMobileMenuOpen(false); setGuideOpen(true); }}
+              className="w-full text-center py-2 text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 rounded-lg flex items-center justify-center space-x-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+              <span>Open Portal Guide Walkthrough</span>
+            </button>
+          </div>
+
+          {isAuthenticated && user ? (
               <div className="flex items-center space-x-3">
                 <Link
                   to="/profile"
@@ -237,6 +259,8 @@ export const Navbar: React.FC = () => {
           )}
         </div>
       )}
+      {/* Role Walkthrough Guide Modal */}
+      <PortalGuideModal isOpen={guideOpen} onClose={() => setGuideOpen(false)} />
     </header>
   );
 };
