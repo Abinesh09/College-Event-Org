@@ -1,14 +1,40 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, User as UserIcon, LogOut, PlusCircle, BookmarkCheck, LayoutDashboard, Sparkles, Menu, X, Play } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Calendar, User as UserIcon, LogOut, PlusCircle, BookmarkCheck, LayoutDashboard, Sparkles, Menu, X, Compass } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PortalGuideModal } from './PortalGuideModal';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, isTeacher, isStudent, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+
+  const isActive = (path: string) => {
+    if (path === '/events') {
+      return location.pathname === '/events' || location.pathname.startsWith('/events/');
+    }
+    if (path === '/teacher/dashboard') {
+      return (
+        location.pathname === '/teacher/dashboard' ||
+        (location.pathname.startsWith('/teacher/events') && location.pathname !== '/teacher/events/create')
+      );
+    }
+    if (path === '/teacher/events/create') {
+      return location.pathname === '/teacher/events/create';
+    }
+    if (path === '/student/dashboard') {
+      return location.pathname === '/student/dashboard';
+    }
+    if (path === '/student/registrations') {
+      return location.pathname === '/student/registrations';
+    }
+    if (path === '/profile') {
+      return location.pathname === '/profile';
+    }
+    return location.pathname === path;
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -37,11 +63,16 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-3">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             <Link
               to="/events"
-              className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors"
+              className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all flex items-center ${
+                isActive('/events')
+                  ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/20'
+                  : 'text-slate-600 hover:text-teal-700 hover:bg-slate-100'
+              }`}
             >
+              <Compass className={`w-4 h-4 mr-1.5 ${isActive('/events') ? 'text-white' : 'text-teal-600'}`} />
               Browse Events
             </Link>
 
@@ -49,16 +80,32 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/student/dashboard"
-                  className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center"
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all flex items-center ${
+                    isActive('/student/dashboard')
+                      ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/20'
+                      : 'text-slate-600 hover:text-teal-700 hover:bg-slate-100'
+                  }`}
                 >
-                  <LayoutDashboard className="w-4 h-4 mr-1.5 text-teal-600" />
+                  <LayoutDashboard
+                    className={`w-4 h-4 mr-1.5 ${
+                      isActive('/student/dashboard') ? 'text-white' : 'text-teal-600'
+                    }`}
+                  />
                   Student Portal
                 </Link>
                 <Link
                   to="/student/registrations"
-                  className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center"
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all flex items-center ${
+                    isActive('/student/registrations')
+                      ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/20'
+                      : 'text-slate-600 hover:text-teal-700 hover:bg-slate-100'
+                  }`}
                 >
-                  <BookmarkCheck className="w-4 h-4 mr-1.5 text-teal-600" />
+                  <BookmarkCheck
+                    className={`w-4 h-4 mr-1.5 ${
+                      isActive('/student/registrations') ? 'text-white' : 'text-teal-600'
+                    }`}
+                  />
                   My Registrations
                 </Link>
               </>
@@ -68,16 +115,32 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/teacher/dashboard"
-                  className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center"
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all flex items-center ${
+                    isActive('/teacher/dashboard')
+                      ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/20'
+                      : 'text-slate-600 hover:text-teal-700 hover:bg-slate-100'
+                  }`}
                 >
-                  <LayoutDashboard className="w-4 h-4 mr-1.5 text-teal-600" />
+                  <LayoutDashboard
+                    className={`w-4 h-4 mr-1.5 ${
+                      isActive('/teacher/dashboard') ? 'text-white' : 'text-teal-600'
+                    }`}
+                  />
                   Teacher Dashboard
                 </Link>
                 <Link
                   to="/teacher/events/create"
-                  className="px-3 py-2 text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors flex items-center border border-teal-200"
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all flex items-center border ${
+                    isActive('/teacher/events/create')
+                      ? 'bg-teal-700 text-white border-teal-800 shadow-sm shadow-teal-700/20'
+                      : 'text-teal-700 bg-teal-50 hover:bg-teal-100 border-teal-200'
+                  }`}
                 >
-                  <PlusCircle className="w-4 h-4 mr-1.5" />
+                  <PlusCircle
+                    className={`w-4 h-4 mr-1.5 ${
+                      isActive('/teacher/events/create') ? 'text-white' : 'text-teal-600'
+                    }`}
+                  />
                   Create Event
                 </Link>
               </>
@@ -99,7 +162,11 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-teal-300 hover:bg-slate-50 transition-colors"
+                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg border transition-all ${
+                    isActive('/profile')
+                      ? 'border-teal-500 bg-teal-50/80 ring-2 ring-teal-400/40 shadow-sm'
+                      : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50'
+                  }`}
                 >
                   <div className="w-8 h-8 rounded-full bg-slate-100 text-teal-700 flex items-center justify-center font-bold text-xs uppercase">
                     {user.full_name.charAt(0)}
@@ -172,8 +239,13 @@ export const Navbar: React.FC = () => {
           <Link
             to="/events"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-slate-700 hover:text-teal-700"
+            className={`flex items-center py-2.5 px-3 text-sm font-semibold rounded-lg transition-colors ${
+              isActive('/events')
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-700 hover:text-teal-700 hover:bg-slate-50'
+            }`}
           >
+            <Compass className={`w-4 h-4 mr-2 ${isActive('/events') ? 'text-white' : 'text-teal-600'}`} />
             Browse Events
           </Link>
 
@@ -182,15 +254,33 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/student/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-medium text-slate-700 hover:text-teal-700"
+                className={`flex items-center py-2.5 px-3 text-sm font-semibold rounded-lg transition-colors ${
+                  isActive('/student/dashboard')
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-teal-700 hover:bg-slate-50'
+                }`}
               >
+                <LayoutDashboard
+                  className={`w-4 h-4 mr-2 ${
+                    isActive('/student/dashboard') ? 'text-white' : 'text-teal-600'
+                  }`}
+                />
                 Student Portal
               </Link>
               <Link
                 to="/student/registrations"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-medium text-slate-700 hover:text-teal-700"
+                className={`flex items-center py-2.5 px-3 text-sm font-semibold rounded-lg transition-colors ${
+                  isActive('/student/registrations')
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-teal-700 hover:bg-slate-50'
+                }`}
               >
+                <BookmarkCheck
+                  className={`w-4 h-4 mr-2 ${
+                    isActive('/student/registrations') ? 'text-white' : 'text-teal-600'
+                  }`}
+                />
                 My Registrations
               </Link>
             </>
@@ -201,15 +291,33 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/teacher/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-medium text-slate-700 hover:text-teal-700"
+                className={`flex items-center py-2.5 px-3 text-sm font-semibold rounded-lg transition-colors ${
+                  isActive('/teacher/dashboard')
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-teal-700 hover:bg-slate-50'
+                }`}
               >
+                <LayoutDashboard
+                  className={`w-4 h-4 mr-2 ${
+                    isActive('/teacher/dashboard') ? 'text-white' : 'text-teal-600'
+                  }`}
+                />
                 Teacher Dashboard
               </Link>
               <Link
                 to="/teacher/events/create"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-medium text-teal-700"
+                className={`flex items-center py-2.5 px-3 text-sm font-semibold rounded-lg transition-colors ${
+                  isActive('/teacher/events/create')
+                    ? 'bg-teal-700 text-white shadow-sm'
+                    : 'text-teal-700 bg-teal-50 border border-teal-200'
+                }`}
               >
+                <PlusCircle
+                  className={`w-4 h-4 mr-2 ${
+                    isActive('/teacher/events/create') ? 'text-white' : 'text-teal-600'
+                  }`}
+                />
                 + Create Event
               </Link>
             </>
