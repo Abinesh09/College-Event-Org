@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter, Calendar, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Filter, Calendar, RefreshCw, ChevronLeft, ChevronRight, X, AlertCircle } from 'lucide-react';
 import { api } from '../api/client';
 import { Event, PaginationMeta } from '../types';
 import { EventCard } from '../components/EventCard';
@@ -16,6 +16,7 @@ export const BrowseEventsPage: React.FC = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [eventType, setEventType] = useState('All');
@@ -62,17 +63,31 @@ export const BrowseEventsPage: React.FC = () => {
     'Completed',
   ];
 
-  const fetchEvents = async (page = 1) => {
+  const fetchEvents = async (
+    page = 1,
+    overrideSearch?: string,
+    overrideCat?: string,
+    overrideType?: string,
+    overrideDept?: string,
+    overrideStat?: string
+  ) => {
     setLoading(true);
+    setError(null);
     try {
+      const qSearch = overrideSearch !== undefined ? overrideSearch : search;
+      const qCat = overrideCat !== undefined ? overrideCat : (category !== 'All' ? category : '');
+      const qType = overrideType !== undefined ? overrideType : (eventType !== 'All' ? eventType : '');
+      const qDept = overrideDept !== undefined ? overrideDept : (department !== 'All' ? department : '');
+      const qStat = overrideStat !== undefined ? overrideStat : (status !== 'All' ? status : '');
+
       const res = await api.listEvents({
         page,
         limit: 12,
-        search,
-        category: category !== 'All' ? category : '',
-        event_type: eventType !== 'All' ? eventType : '',
-        department: department !== 'All' ? department : '',
-        status: status !== 'All' ? status : '',
+        search: qSearch,
+        category: qCat,
+        event_type: qType,
+        department: qDept,
+        status: qStat,
       });
 
       if (res.data) {
@@ -81,8 +96,9 @@ export const BrowseEventsPage: React.FC = () => {
       if (res.pagination) {
         setPagination(res.pagination);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to query events', err);
+      setError(err.message || 'Unable to connect to events service. Please verify backend is running.');
     } finally {
       setLoading(false);
     }
@@ -103,6 +119,7 @@ export const BrowseEventsPage: React.FC = () => {
     setEventType('All');
     setDepartment('All');
     setStatus('All');
+    fetchEvents(1, '', '', '', '', '');
   };
 
   return (
@@ -202,6 +219,22 @@ export const BrowseEventsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Error state */}
+      {error && (
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={() => fetchEvents(1)}
+            className="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg text-xs font-semibold"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Events Grid */}
       {loading ? (

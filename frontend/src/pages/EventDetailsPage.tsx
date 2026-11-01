@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, MapPin, Users, Award, Shield, Mail, CheckCircle2, AlertCircle, ArrowLeft, Edit3, BarChart2, Download } from 'lucide-react';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Calendar, Clock, MapPin, Users, Award, Shield, Mail, CheckCircle2, AlertCircle, ArrowLeft, Edit3, BarChart2, Download, UserPlus, LogIn } from 'lucide-react';
 import { api } from '../api/client';
 import { Event } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +10,7 @@ import { ConfirmModal } from '../components/ConfirmModal';
 export const EventDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, isTeacher, isStudent } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
@@ -35,7 +36,13 @@ export const EventDetailsPage: React.FC = () => {
 
   useEffect(() => {
     fetchEvent();
-  }, [id]);
+    if ((location.state as any)?.successMsg) {
+      setSuccessMsg((location.state as any).successMsg);
+    }
+    if ((location.state as any)?.errorMsg) {
+      setError((location.state as any).errorMsg);
+    }
+  }, [id, location.state]);
 
   const handleRegister = async () => {
     if (!isAuthenticated) {
@@ -313,12 +320,22 @@ export const EventDetailsPage: React.FC = () => {
                     Teacher account logged in
                   </div>
                 ) : !isAuthenticated ? (
-                  <button
-                    onClick={() => navigate('/login', { state: { from: { pathname: `/events/${id}` } } })}
-                    className="w-full py-3 px-4 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/20 transition-colors"
-                  >
-                    Log In to Register
-                  </button>
+                  <div className="space-y-2.5">
+                    <Link
+                      to={`/register?eventId=${id}&redirect=${encodeURIComponent(`/events/${id}`)}`}
+                      className="w-full py-3 px-4 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/25 transition-all flex items-center justify-center space-x-1.5"
+                    >
+                      <UserPlus className="w-4 h-4 mr-1" />
+                      <span>Register for Event (Sign Up)</span>
+                    </Link>
+                    <button
+                      onClick={() => navigate('/login', { state: { from: { pathname: `/events/${id}` } } })}
+                      className="w-full py-2 px-4 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center justify-center space-x-1"
+                    >
+                      <LogIn className="w-3.5 h-3.5 mr-1 text-slate-500" />
+                      <span>Already Registered? Log In</span>
+                    </button>
+                  </div>
                 ) : isEventFull ? (
                   <button
                     disabled

@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserCheck, AlertCircle, BookOpen, Lock, Mail, Building2, Hash, Calendar, Phone, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { UserCheck, AlertCircle, BookOpen, Lock, Mail, Building2, Hash, Calendar, Phone, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../api/client';
+import { Event } from '../types';
 
 export const StudentRegisterPage: React.FC = () => {
   const { registerStudent } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
+  const eventId = searchParams.get('eventId');
+  const redirectParam = searchParams.get('redirect');
+
+  const [targetEvent, setTargetEvent] = useState<Event | null>(null);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -23,6 +30,20 @@ export const StudentRegisterPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (eventId) {
+      api.getEvent(eventId)
+        .then((res) => {
+          if (res.data) {
+            setTargetEvent(res.data);
+          }
+        })
+        .catch((err) => {
+          console.warn('Could not prefetch target event', err);
+        });
+    }
+  }, [eventId]);
 
   const departments = [
     'Computer Science',
@@ -79,7 +100,32 @@ export const StudentRegisterPage: React.FC = () => {
       };
 
       await registerStudent(payload);
-      navigate('/student/dashboard');
+
+      // If registered from an event link, automatically register for that event!
+      if (eventId) {
+        try {
+          await api.registerForEvent(eventId);
+          navigate(`/events/${eventId}`, {
+            state: {
+              successMsg: `🎉 Welcome ${formData.full_name}! Your student account was created and your seat for "${targetEvent?.title || 'the event'}" is confirmed!`,
+            },
+          });
+          return;
+        } catch (regErr: any) {
+          navigate(`/events/${eventId}`, {
+            state: {
+              errorMsg: regErr.message || 'Account created, but seat reservation could not be completed.',
+            },
+          });
+          return;
+        }
+      }
+
+      if (redirectParam) {
+        navigate(redirectParam);
+      } else {
+        navigate('/student/dashboard');
+      }
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please check your details.');
     } finally {
@@ -104,6 +150,31 @@ export const StudentRegisterPage: React.FC = () => {
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+          {targetEvent && (
+            <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-sm">
+                  <Sparkles className="w-5 h-5 text-teal-200" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold text-teal-800 uppercase tracking-wider">
+                    One-Step Sign Up & Event Registration
+                  </div>
+                  <div className="text-sm font-extrabold text-slate-900">{targetEvent.title}</div>
+                  <div className="text-xs text-slate-600">
+                    {targetEvent.event_date} • {targetEvent.venue} • {targetEvent.available_seats} seats left
+                  </div>
+                </div>
+              </div>
+              <div className="self-start sm:self-center">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                  Auto-Reserves Seat
+                </span>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start space-x-3">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-500" />
@@ -352,13 +423,15 @@ export const StudentRegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 px-4 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/20 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-50 transition-colors flex items-center justify-center"
+              className="w-full py-3.5 px-4 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/20 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-50 transition-all flex items-center justify-center"
             >
               {submitting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  Creating Student Account...
+                  {targetEvent ? 'Creating Account & Confirming Seat...' : 'Creating Student Account...'}
                 </>
+              ) : targetEvent ? (
+                `Sign Up & Register for "${targetEvent.title}"`
               ) : (
                 'Complete Student Registration'
               )}
