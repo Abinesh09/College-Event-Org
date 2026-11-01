@@ -90,19 +90,17 @@ func main() {
 	api.Get("/events", middleware.OptionalAuth(cfg.JWTSecret), handlers.ListEvents())
 	api.Get("/events/:id", middleware.OptionalAuth(cfg.JWTSecret), handlers.GetEvent())
 
-	// Student Event Registration Endpoints
-	studentOnly := api.Group("", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("student"))
-	studentOnly.Post("/events/:id/register", handlers.RegisterForEvent())
-	studentOnly.Delete("/events/:id/register", handlers.CancelRegistration())
-	studentOnly.Get("/me/registrations", handlers.GetMyRegistrations())
+	// Student Event Registration Endpoints (Requires Student Role)
+	api.Post("/events/:id/register", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("student"), handlers.RegisterForEvent())
+	api.Delete("/events/:id/register", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("student"), handlers.CancelRegistration())
+	api.Get("/me/registrations", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("student"), handlers.GetMyRegistrations())
 
-	// Teacher Management Endpoints
-	teacherOnly := api.Group("", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"))
-	teacherOnly.Post("/events", handlers.CreateEvent())
-	teacherOnly.Put("/events/:id", handlers.UpdateEvent())
-	teacherOnly.Patch("/events/:id/status", handlers.UpdateEventStatus())
-	teacherOnly.Delete("/events/:id", handlers.DeleteEvent())
-	teacherOnly.Post("/upload", handlers.UploadPoster(cfg))
+	// Teacher Event Management Endpoints (Requires Teacher Role)
+	api.Post("/events", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"), handlers.CreateEvent())
+	api.Put("/events/:id", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"), handlers.UpdateEvent())
+	api.Patch("/events/:id/status", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"), handlers.UpdateEventStatus())
+	api.Delete("/events/:id", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"), handlers.DeleteEvent())
+	api.Post("/upload", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"), handlers.UploadPoster(cfg))
 
 	teacher := api.Group("/teacher", middleware.AuthRequired(cfg.JWTSecret), middleware.RequireRole("teacher"))
 	teacher.Get("/dashboard", handlers.GetTeacherDashboardStats())
