@@ -141,13 +141,13 @@ func ListEvents() fiber.Handler {
 				COALESCE(e.eligibility_criteria, ''), COALESCE(e.poster_url, ''), COALESCE(e.contact_info, ''),
 				e.status, e.created_at, e.updated_at,
 				(SELECT COUNT(*) FROM event_registrations r WHERE r.event_id = e.id AND r.status = 'confirmed') as current_registrations,
-				COALESCE((SELECT TRUE FROM event_registrations r WHERE r.event_id = e.id AND r.student_id = $%d AND r.status = 'confirmed'), FALSE) as is_registered
+				CASE WHEN $%d = '' THEN FALSE ELSE COALESCE((SELECT TRUE FROM event_registrations r WHERE r.event_id = e.id AND r.student_id = NULLIF($%d, '')::uuid AND r.status = 'confirmed'), FALSE) END as is_registered
 			FROM events e
 			JOIN users u ON e.organizer_id = u.id
 			WHERE %s
 			ORDER BY e.event_date ASC, e.created_at DESC
 			LIMIT $%d OFFSET $%d
-		`, argIdx, whereStr, argIdx+1, argIdx+2)
+		`, argIdx, argIdx, whereStr, argIdx+1, argIdx+2)
 
 		queryArgs := append(args, studentID, limit, offset)
 		rows, err := database.Pool.Query(ctx, query, queryArgs...)
@@ -207,7 +207,7 @@ func GetEvent() fiber.Handler {
 				COALESCE(e.eligibility_criteria, ''), COALESCE(e.poster_url, ''), COALESCE(e.contact_info, ''),
 				e.status, e.created_at, e.updated_at,
 				(SELECT COUNT(*) FROM event_registrations r WHERE r.event_id = e.id AND r.status = 'confirmed') as current_registrations,
-				COALESCE((SELECT TRUE FROM event_registrations r WHERE r.event_id = e.id AND r.student_id = $2 AND r.status = 'confirmed'), FALSE) as is_registered
+				CASE WHEN $2 = '' THEN FALSE ELSE COALESCE((SELECT TRUE FROM event_registrations r WHERE r.event_id = e.id AND r.student_id = NULLIF($2, '')::uuid AND r.status = 'confirmed'), FALSE) END as is_registered
 			FROM events e
 			JOIN users u ON e.organizer_id = u.id
 			WHERE e.id = $1
