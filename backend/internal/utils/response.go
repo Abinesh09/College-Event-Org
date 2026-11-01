@@ -71,3 +71,4 @@ func JSONPagination(c *fiber.Ctx, status int, message string, data interface{}, 
 		Pagination: meta,
 	})
 }
+

@@ -376,3 +376,4 @@ export const StudentRegisterPage: React.FC = () => {
     </div>
   );
 };
+

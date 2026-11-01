@@ -19,7 +19,7 @@ type Config struct {
 func LoadConfig() *Config {
 	_ = godotenv.Load()
 
-	port := getEnv("PORT", "8080")
+	port := getEnv("PORT", "9092")
 	dbURL := getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/campusconnect?sslmode=disable")
 	jwtSecret := getEnv("JWT_SECRET", "supersecret_jwt_key_campusconnect_2026")
 	uploadDir := getEnv("UPLOAD_DIR", "./uploads")
@@ -49,3 +49,4 @@ func getEnv(key, defaultVal string) string {
 	}
 	return val
 }
+

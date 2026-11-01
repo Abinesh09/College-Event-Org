@@ -54,3 +54,4 @@ func UploadPoster(cfg *config.Config) fiber.Handler {
 		})
 	}
 }
+

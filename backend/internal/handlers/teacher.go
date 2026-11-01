@@ -486,3 +486,4 @@ func ExportEventParticipantsCSV() fiber.Handler {
 		return c.Send(b.Bytes())
 	}
 }
+

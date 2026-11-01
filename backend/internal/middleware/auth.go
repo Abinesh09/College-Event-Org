@@ -74,3 +74,4 @@ func OptionalAuth(jwtSecret string) fiber.Handler {
 		return c.Next()
 	}
 }
+

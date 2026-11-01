@@ -128,3 +128,4 @@ export interface PaginatedApiResponse<T = any> {
   data: T[];
   pagination: PaginationMeta;
 }
+

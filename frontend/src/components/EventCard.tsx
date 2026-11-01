@@ -136,3 +136,4 @@ export const EventCard: React.FC<EventCardProps> = ({ event, showManageButtons =
     </div>
   );
 };
+

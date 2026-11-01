@@ -200,3 +200,4 @@ export const MyRegistrationsPage: React.FC = () => {
     </div>
   );
 };
+

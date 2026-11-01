@@ -155,7 +155,7 @@ docker compose down -v
 
 ### Access URLs:
 - **Frontend Web Portal**: [http://localhost](http://localhost) (Port `80`)
-- **Backend Health Check**: [http://localhost:8080/health](http://localhost:8080/health)
+- **Backend Health Check**: [http://localhost:9092/health](http://localhost:9092/health)
 - **PostgreSQL**: Accessible on host port `5433` (mapped from container `5432` to avoid conflicts with any local PostgreSQL instance)
 
 ---
@@ -176,7 +176,7 @@ Vite starts the frontend development server at:
 http://localhost:5173
 ```
 
-The Vite dev server is pre-configured to proxy `/api` and `/uploads` requests automatically to `http://localhost:8080`.
+The Vite dev server is pre-configured to proxy `/api` and `/uploads` requests automatically to `http://localhost:9092`.
 
 ---
 
@@ -197,7 +197,7 @@ go build -o bin/server ./cmd/server
 ./bin/server
 ```
 
-The API starts on `http://localhost:8080`.
+The API starts on `http://localhost:9092`.
 
 ---
 

@@ -117,3 +117,4 @@ type EventStatistics struct {
 	ByAgeGroup         []LabelCount `json:"by_age_group"`
 	OverTime           []DateCount  `json:"over_time"`
 }
+

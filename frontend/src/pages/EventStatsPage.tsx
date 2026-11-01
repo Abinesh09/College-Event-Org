@@ -97,3 +97,4 @@ export const EventStatsPage: React.FC = () => {
     </div>
   );
 };
+

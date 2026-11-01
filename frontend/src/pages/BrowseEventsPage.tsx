@@ -263,3 +263,4 @@ export const BrowseEventsPage: React.FC = () => {
     </div>
   );
 };
+

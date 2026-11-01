@@ -52,3 +52,4 @@ func CloseDB() {
 		Pool.Close()
 	}
 }
+

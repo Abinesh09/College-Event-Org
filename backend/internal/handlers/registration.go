@@ -221,3 +221,4 @@ func GetMyRegistrations() fiber.Handler {
 		return utils.JSONSuccess(c, fiber.StatusOK, "Registrations retrieved", registrations)
 	}
 }
+

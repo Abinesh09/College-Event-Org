@@ -95,3 +95,4 @@ func RunMigrations(pool *pgxpool.Pool) error {
 	log.Println("Database migrations applied successfully")
 	return nil
 }
+

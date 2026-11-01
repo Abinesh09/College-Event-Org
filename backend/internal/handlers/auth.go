@@ -312,3 +312,4 @@ func UpdateProfile() fiber.Handler {
 		return utils.JSONSuccess(c, fiber.StatusOK, "Profile updated successfully", nil)
 	}
 }
+

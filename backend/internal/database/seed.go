@@ -366,3 +366,4 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 	log.Println("Seed data successfully populated!")
 	return nil
 }
+

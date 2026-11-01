@@ -28,8 +28,9 @@ RUN mkdir -p /app/uploads
 # Copy compiled binary
 COPY --from=builder /app/server /app/server
 
-EXPOSE 8080
+EXPOSE 9092
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=5 CMD curl -f http://localhost:8080/health || exit 1
+HEALTHCHECK --interval=10s --timeout=3s --retries=5 CMD curl -f http://localhost:9092/health || exit 1
 
 CMD ["/app/server"]
+

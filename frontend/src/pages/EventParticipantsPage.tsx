@@ -327,3 +327,4 @@ export const EventParticipantsPage: React.FC = () => {
     </div>
   );
 };
+
