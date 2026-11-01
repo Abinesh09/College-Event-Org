@@ -1,37 +1,41 @@
 # CampusConnect — College Event Management System
 
-A full-stack web application for managing college events, student registrations, and participant statistics. Built with **React, Go, PostgreSQL, and Docker**.
+A production-ready, full-stack web application for managing university and college campus events, student seat registrations, participant rosters, and live demographic analytics. Built with **React 18 + Vite + TypeScript, Go 1.24 (Fiber v2), PostgreSQL 16/17, and Docker Compose**.
+
+Localized for **Tamil Nadu collegiate institutions** (Anna University, PSG Tech, MIT Chromepet, SSN, and TCE Madurai) with Indian standard mobile numbers (`+91` 10-digit).
 
 ---
 
-## Features
+## Key Highlights & Features
 
-- **Teacher Login and Event Management**: Authenticated teachers create, edit, publish, draft, and cancel events.
-- **Seat Capacity & Concurrency Safety**: Row-level locking (`SELECT ... FOR UPDATE`) prevents overbooking and race conditions during simultaneous registrations.
-- **Student Registration & Login**: Public student onboarding with department, roll number, and demographic options. Passwords securely hashed with Bcrypt.
-- **Browse & Filter Events**: Search and filter open events by department, category, date, and event type.
-- **Student Dashboard & Reservations**: 1-Click event registration, view confirmed event passes, and cancel registrations prior to event start.
-- **Participant Rosters**: Teachers can view, search, and paginate through verified attendee lists with full demographic records.
-- **Demographic Statistics & Charts**: Real-time interactive charts displaying registrations by department, academic year, gender, and capacity utilization.
-- **1-Click CSV Export**: Organizers can download verified attendee rosters in standard CSV format.
-- **Role-Based Access Control (RBAC)**: Secure JWT cookies/headers with backend role enforcement and frontend protected routes.
-- **Data Persistence**: Automated PostgreSQL schema migrations and persistent Docker volumes.
+- **Dynamic Hero Event Showcase**: Smooth, animated background carousel displaying crystal-clear photos of flagship events, including ***Campus Sangamam: Inter-College Cultural Extravaganza 2026*** at Vivekananda Auditorium, CEG Campus, Guindy.
+- **Active Navigation Highlights**: High-contrast vibrant teal pills clearly indicate active pages (`Browse Events`, `Teacher Dashboard`, `Student Portal`, `My Registrations`).
+- **Clean Slate Initial State**: Zero dummy event bookings seeded in `event_registrations` so evaluators and examiners can experience live, real-time seat reservation from a fresh starting point.
+- **Concurrency-Safe Registrations**: PostgreSQL row-level locking (`SELECT ... FOR UPDATE`) guarantees zero overbooking or race conditions, even during high-traffic registration rushes.
+- **Faculty / Organizer Suite**: Authenticated professors can create, edit, publish, draft, and cancel events, track remaining capacity, and monitor live attendee numbers.
+- **Interactive Demographic Analytics**: Real-time Chart.js visual charts breaking down participant rosters by department, academic year, and gender ratio.
+- **1-Click Verified CSV Export**: Organizers can download attendance sheets in CSV format for offline accreditation and administrative reporting.
+- **Student Portal & Pass Management**: 1-Click registration, instant pass confirmation, and self-service cancellation before registration deadlines.
+- **Indian Format Validation**: Standardized `+91` 10-digit mobile number badge and strict regex validation.
+- **Role-Based Access Control (RBAC)**: Secure HTTP-only JWT cookies and bearer tokens with Bcrypt password hashing.
+- **Standalone Offline Walkthrough Guide**: Self-contained offline player [`CampusConnect_Walkthrough_Video.html`](./CampusConnect_Walkthrough_Video.html) for presenting student and teacher workflows without setting up external media players.
 
 ---
 
 ## Technology Stack
 
-| Technology | Purpose |
-| :--- | :--- |
-| **React + Vite + TypeScript** | Frontend Single Page Application |
-| **Tailwind CSS** | Responsive UI & Modern Design System |
-| **Chart.js & React-Chartjs-2** | Interactive Demographic & Capacity Charts |
-| **Go + Fiber** | Backend REST API |
-| **pgxpool (jackc/pgx/v5)** | High-performance PostgreSQL Connection Pooling |
-| **Bcrypt & JWT (golang-jwt/v5)** | Secure Password Hashing & Session Tokens |
-| **PostgreSQL 16/17** | Relational Database with Row-Level Transaction Locks |
-| **Docker & Nginx** | Containerization & Reverse Proxy |
-| **Docker Compose** | Multi-Container Service Orchestration |
+| Component | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React 18, Vite, TypeScript | Fast, typed Single Page Application |
+| **Styling** | Tailwind CSS v3 | Responsive modern design system |
+| **Data Visualization** | Chart.js, React-Chartjs-2 | Interactive demographic & capacity charts |
+| **Icons** | Lucide React | High-contrast visual navigation icons |
+| **Backend** | Go 1.24, Fiber v2 | High-throughput, low-latency REST API |
+| **Database Pool** | pgxpool (jackc/pgx/v5) | High-performance PostgreSQL connection pooling |
+| **Security & Auth** | Bcrypt, golang-jwt/v5 | Password hashing & role-based JWT authentication |
+| **Database** | PostgreSQL 16/17 | ACID-compliant relational DB with row-level locks |
+| **Web Server** | Nginx Alpine | Production reverse proxy & static asset delivery |
+| **Orchestration** | Docker & Docker Compose | Multi-container automated startup |
 
 ---
 
@@ -41,252 +45,175 @@ A full-stack web application for managing college events, student registrations,
 College-Event-Org/
 ├── frontend/
 │   ├── src/
-│   │   ├── api/client.ts              # API fetch client & CSV download utility
-│   │   ├── components/                # Navbar, Footer, EventCard, StatusBadge, Charts & Modals
+│   │   ├── api/client.ts              # Typed API client & CSV export trigger
+│   │   ├── components/                # Navbar, Footer, EventCard, StatusBadge, Charts
 │   │   ├── context/AuthContext.tsx    # Auth state & user session persistence
-│   │   ├── pages/                     # 14 Full-featured application pages
-│   │   ├── types/index.ts             # TypeScript interfaces
-│   │   ├── App.tsx                    # Route definitions & guards
-│   │   └── main.tsx                   # React root entry
+│   │   ├── pages/                     # Application pages (Home, Events, Dashboards, Profile, etc.)
+│   │   ├── types/index.ts             # TypeScript domain models
+│   │   ├── App.tsx                    # Route tree with role-protected guards
+│   │   └── main.tsx                   # React root entrypoint
 │   ├── nginx.conf                     # Nginx reverse proxy configuration
-│   ├── package.json                   # Dependencies & scripts
+│   ├── package.json                   # Dependencies and scripts
 │   ├── Dockerfile                     # Multi-stage production container
 │   └── .env.example
 ├── backend/
-│   ├── cmd/server/main.go             # Application entrypoint & route wiring
+│   ├── cmd/server/main.go             # Application entrypoint & routing
 │   ├── internal/
-│   │   ├── config/config.go           # Environment configuration loader
-│   │   ├── database/                  # pgx pool, migrations & demo seeds
-│   │   ├── handlers/                  # Auth, Event CRUD, Registrations & Teacher Analytics
-│   │   ├── middleware/                # JWT auth guards & role check middleware
-│   │   ├── models/models.go           # Struct definitions & DTOs
+│   │   ├── config/config.go           # Environment variables loader
+│   │   ├── database/                  # pgx pool, schema migrations & Tamil Nadu seed data
+│   │   ├── handlers/                  # Auth, Event CRUD, Registrations & Analytics
+│   │   ├── middleware/                # JWT auth guards & role enforcement
+│   │   ├── models/models.go           # Struct definitions & database DTOs
 │   │   └── utils/                     # Password hashing, JWT & standardized JSON responses
-│   ├── uploads/                       # Static event poster uploads directory
+│   ├── uploads/                       # Event poster storage directory
 │   ├── go.mod
 │   ├── go.sum
 │   ├── Dockerfile                     # Multi-stage Go static binary container
 │   └── .env.example
-├── docker-compose.yml                 # PostgreSQL, Go API & React services
+├── docker-compose.yml                 # PostgreSQL, Go Fiber API & React Nginx services
+├── CampusConnect_Walkthrough_Video.html # Standalone offline interactive guide
 ├── .env.example                       # Root environment template
 └── README.md
 ```
 
 ---
 
-## Prerequisites
+## Quick Start with Docker (Recommended)
 
-Install the following software:
+### 1. Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+- [Git](https://git-scm.com/) installed.
 
-- **Git**
-- **Go** (v1.22+ or v1.25+)
-- **Node.js** (v20+ or v22+) and **npm**
-- **Docker Desktop** (must be running for containerized workflow)
-
----
-
-## 1. Clone the Repository
-
+### 2. Clone and Setup Environment
 ```bash
 git clone https://github.com/Abinesh09/College-Event-Org.git
 cd College-Event-Org
 ```
 
----
+Create `.env` from template:
+```powershell
+# Windows PowerShell
+Copy-Item .env.example .env
 
-## 2. Configure Environment Variables
-
-Create a root `.env` file using the provided example:
-
-On Linux / macOS:
-```bash
+# Linux / macOS
 cp .env.example .env
 ```
 
-On Windows PowerShell:
-```powershell
-Copy-Item .env.example .env
-```
-
-Configure database credentials, JWT secrets, and port settings as required. Never commit the actual `.env` file to Git.
-
----
-
-## 3. Run the Entire Application Using Docker
-
-From the project root:
-
-```bash
-docker compose up --build
-```
-
-To run in the background (detached mode):
-
+### 3. Launch Services
 ```bash
 docker compose up --build -d
 ```
 
-Check running containers:
+### 4. Access URLs
+- **Web Portal**: [http://localhost](http://localhost) (Port `80`)
+- **Backend API**: [http://localhost:9092/api/events](http://localhost:9092/api/events)
+- **Backend Health Check**: [http://localhost:9092/health](http://localhost:9092/health)
+- **PostgreSQL Database**: Port `5433` (mapped from container `5432` to avoid local port conflicts)
 
-```bash
-docker compose ps
-```
-
-View application logs:
-
+To view real-time logs:
 ```bash
 docker compose logs -f
 ```
 
-Stop the application:
-
+To stop containers:
 ```bash
 docker compose down
 ```
 
-Stop the application without deleting the database volume. Your saved database data will remain available when you start it again.
-
-To reset the database completely (erasing all stored tables and re-running migrations/seed):
-
-```bash
-docker compose down -v
-```
-
-> **Warning:** This removes named Docker volumes, including all persistent database data.
-
-### Access URLs:
-- **Frontend Web Portal**: [http://localhost](http://localhost) (Port `80`)
-- **Backend Health Check**: [http://localhost:9092/health](http://localhost:9092/health)
-- **PostgreSQL**: Accessible on host port `5433` (mapped from container `5432` to avoid conflicts with any local PostgreSQL instance)
-
 ---
 
-## 4. Run the Frontend Separately (Local Dev)
+## Local Development (Without Docker)
 
-Open a terminal in the `frontend` folder:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Vite starts the frontend development server at:
-
-```
-http://localhost:5173
-```
-
-The Vite dev server is pre-configured to proxy `/api` and `/uploads` requests automatically to `http://localhost:9092`.
-
----
-
-## 5. Run the Go Backend Separately (Local Dev)
-
-Open another terminal in the `backend` folder:
-
+### Run Backend Locally
+Ensure PostgreSQL is running locally on port 5432 or 5433.
 ```bash
 cd backend
 go mod download
 go run ./cmd/server
 ```
-
-You can also build the static binary directly:
-
-```bash
-go build -o bin/server ./cmd/server
-./bin/server
-```
-
 The API starts on `http://localhost:9092`.
 
----
-
-## 6. Database Setup
-
-PostgreSQL persists:
-- User accounts and Bcrypt password hashes
-- Student profiles (department, student ID, year of study, age, gender, phone)
-- Event details (dates, venue, category, organizer, poster URL, capacity limits)
-- Student registrations with unique constraints and timestamps
-
-When using **Docker Compose**, PostgreSQL starts automatically as a healthy service with a persistent volume (`postgres_data`).
-When running **locally without Docker**, ensure PostgreSQL is running and update `DATABASE_URL` in `.env`:
-```env
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/campusconnect?sslmode=disable
+### Run Frontend Locally
+In a separate terminal:
+```bash
+cd frontend
+npm install
+npm run dev
 ```
-
-Schema migrations and demo seed records run automatically on backend startup.
-
----
-
-## 7. Demo Accounts & Testing
-
-The system automatically initializes demo accounts on first launch for immediate testing and presentation:
-
-| Role | Email | Password | Name & Department |
-| :--- | :--- | :--- | :--- |
-| **Teacher / Organizer** | `teacher@college.edu` | `Password123!` | Prof. Alan Turing (*Computer Science*) |
-| **Teacher / Organizer** | `sarah.faculty@college.edu` | `Password123!` | Dr. Sarah Connor (*Mechanical Eng*) |
-| **Student** | `alex.student@college.edu` | `Password123!` | Alex Rivera (*CS 3rd Year*) |
-| **Student** | `priya.student@college.edu` | `Password123!` | Priya Sharma (*ECE 2nd Year*) |
-| **Student** | `marcus.student@college.edu` | `Password123!` | Marcus Vance (*Mech 4th Year*) |
-
-> **Pro-Tip**: The login page includes **"Quick Demo Auto-Fill"** buttons to log in with a single click without manual typing.
-
-### Testing the Student Workflow:
-1. Click **Student Register** or log in with `alex.student@college.edu`.
-2. Browse upcoming events in the directory.
-3. Open an event details page to view available seats and registration rules.
-4. Click **Register for Event** to confirm your seat reservation.
-5. Visit **My Registrations** to view your active event pass or cancel if needed.
-
-### Testing the Teacher Workflow:
-1. Log in using `teacher@college.edu` (Password: `Password123!`).
-2. Go to **Teacher Dashboard** to inspect summary metric cards.
-3. Click **Create New Event**, fill out the schedule and capacity, and click **Publish Event**.
-4. Open **View Attendees** on an event to see the searchable student roster.
-5. Click **Demographics & Charts** to view real-time department, academic year, and gender breakdowns.
-6. Click **Export CSV** to download the registrant roster.
+The Vite development server starts at `http://localhost:5173` and automatically proxies `/api` calls to `http://localhost:9092`.
 
 ---
 
-## 8. Troubleshooting
+## Demo Accounts & Test Credentials
 
-### Docker command not found
-Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), start it from the Start Menu, and reopen your terminal.
+The database seeds authentic Tamil Nadu faculty and student demo profiles on first boot:
 
-### Database connection failed
-Verify the database credentials, hostname, and port in `.env`.
-Inside Docker Compose, the backend connects to PostgreSQL using the service name `postgres:5432`, not `localhost`.
-When running locally on Windows host, ensure your local PostgreSQL service is running.
+| Role | Name & College | Email | Password | Mobile (+91) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Faculty / Organizer** | Prof. K. Anbarasan (*Anna University, CEG*) | `teacher@college.edu` | `Password123!` | `+91 98401 23456` |
+| **Faculty / Organizer** | Dr. Meenakshi Sundaram (*PSG Tech*) | `sarah.faculty@college.edu` | `Password123!` | `+91 94432 44556` |
+| **Student** | Karthik Raja (*CEG Anna University*) | `karthik.student@college.edu` | `Password123!` | `+91 98412 34567` |
+| **Student** | Priya Natarajan (*SSN College of Eng*) | `priya.student@college.edu` | `Password123!` | `+91 97901 23456` |
+| **Student** | Vigneshwaran S (*MIT Chromepet*) | `vignesh.student@college.edu` | `Password123!` | `+91 98840 98765` |
+| **Student** | Kaviya Murugan (*PSG Tech*) | `kaviya.student@college.edu` | `Password123!` | `+91 94421 87654` |
+| **Student** | Soundarya R (*TCE Madurai*) | `soundarya.student@college.edu` | `Password123!` | `+91 99430 11223` |
 
-### Port already in use
-- Host port `5432` busy? `docker-compose.yml` maps PostgreSQL to host port `5433` by default (`${DB_HOST_PORT:-5433}:5432`) to prevent conflicts.
-- Host port `80` busy? Change `FRONTEND_PORT=3000` in `.env` to run the web interface on `http://localhost:3000`.
+> **Pro-Tip**: The login page provides **"Quick Demo Auto-Fill"** buttons to log in with a single click without manual typing.
 
-### Tables or seed data missing
-The backend automatically runs `database.RunMigrations()` and `database.SeedDatabase()` on boot. If you need a fresh reset:
+---
+
+## Seeded Live Events
+
+The system comes pre-loaded with Tamil Nadu inter-college events:
+
+1. 🎭 **Campus Sangamam: Inter-College Cultural Extravaganza 2026**
+   - *Venue*: Vivekananda Auditorium, CEG Campus, Guindy, Chennai
+   - *Capacity*: 150 Seats
+2. 💻 **InnovateX 2026: 36-Hour Tamil Nadu State Hackathon**
+   - *Venue*: Ramanujan Computing Centre & TAG Auditorium, Anna University
+   - *Capacity*: 120 Seats
+3. 🤖 **RoboWars & Autonomous Drone Derby 2026**
+   - *Venue*: GRD Open Air Theatre & Dynamics Arena, PSG Tech, Coimbatore
+   - *Capacity*: 80 Seats
+4. 🏃 **Tamil Nadu State Inter-Collegiate Athletic Championship**
+   - *Venue*: Jawaharlal Nehru Stadium & Anna University Sports Pavilion
+   - *Capacity*: 200 Seats
+5. 🧠 **Generative AI & Agentic Systems Masterclass**
+   - *Venue*: Dr. A.P.J. Abdul Kalam Convention Hall, SSN Campus, Kalavakkam
+   - *Capacity*: 60 Seats
+
+---
+
+## Verification & Walkthrough Steps
+
+### Testing Student Workflow:
+1. Navigate to `http://localhost`.
+2. Click **Log In** and choose student auto-fill (or log in with `karthik.student@college.edu`).
+3. Click **Browse Events** from the top header (active tab highlights in solid teal).
+4. Click **Campus Sangamam: Inter-College Cultural Extravaganza 2026**.
+5. Click **Register for Event** — seats update in real time with concurrency safeguards.
+6. Check **My Registrations** to view the confirmed seat pass and cancel option.
+
+### Testing Teacher / Organizer Workflow:
+1. Log in with `teacher@college.edu` (Prof. K. Anbarasan).
+2. Click **Teacher Dashboard** in the header.
+3. Review total events, active events, and registrations summary cards.
+4. Click **View Attendees** on any event to see real-time student registrations with Tamil Nadu college names, roll numbers, and contact details.
+5. Click **Demographics & Analytics** to see interactive department, gender, and academic year charts.
+6. Click **Export CSV** to download a verified participant roster sheet.
+
+---
+
+## Database Reset Command
+
+To wipe the database and re-seed cleanly:
 ```bash
 docker compose down -v
-docker compose up --build
+docker compose up --build -d
 ```
-
----
-
-## Commands to Remember
-
-| Action | Command |
-| :--- | :--- |
-| **Start everything** | `docker compose up --build` |
-| **Run in background** | `docker compose up --build -d` |
-| **View logs** | `docker compose logs -f` |
-| **Stop services** | `docker compose down` |
-| **Reset database** | `docker compose down -v` |
-| **Run frontend locally** | `cd frontend && npm install && npm run dev` |
-| **Run backend locally** | `cd backend && go run ./cmd/server` |
 
 ---
 
 ## License
 
-This project is developed for educational and college demonstration purposes. Add an open-source license (such as MIT) if you intend to distribute it publicly.
+Developed for university demonstration and academic evaluation.
