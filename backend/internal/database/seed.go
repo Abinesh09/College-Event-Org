@@ -332,47 +332,10 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 		createdEventIDs = append(createdEventIDs, eID)
 	}
 
-	// 4. Seed Registrations
-	// Register students to Event 1 (Hackathon - Event ID index 0)
-	hackathonID := createdEventIDs[0]
-	for i := 0; i < len(studentIDs); i++ {
-		_, err = pool.Exec(ctx, `
-			INSERT INTO event_registrations (event_id, student_id, registered_at, status)
-			VALUES ($1, $2, $3, 'confirmed')
-		`, hackathonID, studentIDs[i], now.Add(-time.Duration(i*6)*time.Hour))
-		if err != nil {
-			return fmt.Errorf("failed to register student to hackathon: %w", err)
-		}
-	}
-
-	// Register some students to Event 4 (AI Masterclass - Event ID index 3)
-	aiEventID := createdEventIDs[3]
-	for i := 0; i < 3; i++ {
-		_, err = pool.Exec(ctx, `
-			INSERT INTO event_registrations (event_id, student_id, registered_at, status)
-			VALUES ($1, $2, $3, 'confirmed')
-		`, aiEventID, studentIDs[i], now.Add(-time.Duration(i*12)*time.Hour))
-		if err != nil {
-			return fmt.Errorf("failed to register student to AI masterclass: %w", err)
-		}
-	}
-
-	// Register some students to Event 2 (RoboWars - Event ID index 1)
-	roboEventID := createdEventIDs[1]
-	for i := 1; i < 4; i++ {
-		_, err = pool.Exec(ctx, `
-			INSERT INTO event_registrations (event_id, student_id, registered_at, status)
-			VALUES ($1, $2, $3, 'confirmed')
-		`, roboEventID, studentIDs[i], now.Add(-time.Duration(i*8)*time.Hour))
-		if err != nil {
-			return fmt.Errorf("failed to register student to RoboWars: %w", err)
-		}
-	}
-
 	// Flag initial seed as permanently completed so future deletions are never overwritten
 	_, _ = pool.Exec(ctx, "INSERT INTO system_metadata (key, value) VALUES ('initial_seed_completed', 'true') ON CONFLICT (key) DO NOTHING")
 
-	log.Println("Seed data successfully populated and flagged in system_metadata!")
+	log.Println("Seed data successfully populated (clean initial state with 0 test registrations) and flagged in system_metadata!")
 	return nil
 }
 

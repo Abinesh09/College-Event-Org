@@ -312,6 +312,16 @@ export const PortalGuideModal: React.FC<PortalGuideModalProps> = ({ isOpen, onCl
           </div>
 
           <div className="flex items-center space-x-2">
+            <a
+              href="/CampusConnect_Walkthrough_Video.html"
+              download="CampusConnect_Walkthrough_Video.html"
+              className="inline-flex items-center space-x-1 px-2.5 py-1 bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 rounded-lg text-xs font-bold transition-all shadow-sm"
+              title="Download Offline Video Walkthrough File"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Download Video</span>
+            </a>
+
             {/* Mode Switcher */}
             <div className="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center space-x-1">
               <button
