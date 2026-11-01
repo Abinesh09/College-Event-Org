@@ -1,0 +1,7 @@
+bin
+uploads/*
+!uploads/.gitkeep
+.git
+.gitignore
+*.exe
+*.log
