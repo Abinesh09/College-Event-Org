@@ -95,18 +95,7 @@ export const Navbar: React.FC = () => {
               <span>Portal Guide</span>
             </button>
 
-            {/* Mobile Guide Button */}
-          <div className="pt-2">
-            <button
-              onClick={() => { setMobileMenuOpen(false); setGuideOpen(true); }}
-              className="w-full text-center py-2 text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 rounded-lg flex items-center justify-center space-x-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-              <span>Open Portal Guide Walkthrough</span>
-            </button>
-          </div>
-
-          {isAuthenticated && user ? (
+            {isAuthenticated && user ? (
               <div className="flex items-center space-x-3">
                 <Link
                   to="/profile"
@@ -172,6 +161,14 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
+          <button
+            onClick={() => { setMobileMenuOpen(false); setGuideOpen(true); }}
+            className="w-full text-center py-2 px-3 text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 rounded-lg flex items-center justify-center space-x-1.5 shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+            <span>Portal Guide</span>
+          </button>
+
           <Link
             to="/events"
             onClick={() => setMobileMenuOpen(false)}
